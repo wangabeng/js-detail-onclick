@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Document</title>
+
+<style>
+
+</style>
+
+</head>
+<script>
+window.onload=function(){
+	var oBtn1=document.getElementById('btn1');
+	var oBtn2=document.getElementById('btn2');
+	var oBtn3=document.getElementById('btn3');
+	var oBtn4=document.getElementById('btn4');
+
+	/*
+	点击等系统自带的事件如何定义？？？？？？？？？？？？？？？
+
+	第一点 首先要认清楚oBtn.onclick本身是个什么东西？	
+
+	oBtn1,oBtn2--- 都是一个对象object 
+	typeof oBtn1;//object
+
+	那么oBtn1.onclick是对象吗？来检测一下：
+	console.log(oBtn3.onclick);//null 默认是null,null是空对象，也是属于object数据类型。	
+	console.log(typeof oBtn3.onclick);//object
+
+	即便重新赋值：
+	oBtn3.onclick='aaa';
+	console.log(oBtn3.onclick);//null
+	console.log(typeof oBtn3.onclick);//object
+	可以看到其输出结果还是null,说明给这种固定为对象类型赋非对象类型，无效，他只能为object类型。(这点不像普通变量，可以更改数据类型。注意 js生意弱类型语言。
+	比如：
+	var bbb={};
+	bbb='aaa';
+	console.log(bbb);//'aaa' 此时bbb已经由object类型更改为字符串类型了。)
+
+	是不是意味着，给oBtn3.onclick赋值只能赋值object类型呢？我用数组，json和函数分别赋值，结果印证是对的。
+	赋值json对象：
+	oBtn3.onclick={a:3333};
+	console.log(oBtn3.onclick);//Object {a: 3333}
+	console.log(typeof oBtn3.onclick);//object
+
+	赋值数组：
+	oBtn3.onclick=[1,2,3];
+	console.log(oBtn3.onclick);//[1, 2, 3]
+	console.log(typeof oBtn3.onclick);//object
+
+	赋值函数体：
+	oBtn3.onclick=add;
+	console.log(oBtn3.onclick);//输出函数体 代码略
+	console.log(typeof oBtn3.onclick);//function
+
+	function add(){
+		var a=3,b=4;
+		console.log('a+b结果是:'+(a+b) );
+		return a;
+	}
+	这样的赋值等价于：
+	oBtn3.onclick=function add(){
+		var a=3,b=4;
+		console.log('a+b结果是:'+(a+b) );
+		return a;
+	}；
+	这里虽然函数体有返回值，但是没有点击事件，什么也不会发生。发生点击后，会输出：a+b结果是:7。但是点击了，就会有返回值吗？不！前面说过了，这是把函数体赋值给oBtn3.onclick。而不是把函数执行的结果add()赋值给他。那么，韩函数执行的结果赋值给oBtn3.onclick，oBtn3.onclick的值就是return的值吗？用闭包来测试一下：
+	oBtn3.onclick=(function add(){
+		var a=3,b=4;
+		console.log('a+b结果是:'+(a+b) );//会输出 a+b结果是:7
+		return a;
+	})();
+	console.log(oBtn3.onclick);//null
+	console.log(typeof oBtn3.onclick);//object
+	这就说明,并没有把返回值3赋值给oBtn3.onclick,因为oBtn3.onclick是个固定的数据类型object,不可更改.
+	那如果return一个object类型呢?试试看:
+	仅仅把上面的代码的return a更改为:return [a],输出结果就变成：
+		a+b结果是:7
+		[3]
+		object
+	返回一个object类型，赋值就成功了！
+
+	接着罗列一些给onclick赋值的一些情况，并加以区分：
+
+	*/
+
+	
+/*	方式1 ：
+	oBtn1.onclick=add;//方式1
+	相当于：
+	oBtn.onclick=function add(){
+		var a=3,b=4;
+		console.log(a+b);
+		return [a+b];
+	};
+	把定义的函数体（object对象）赋值给oBtn的点击事件 仅仅是把函数体赋值给它。不发生点击事件的时候，函数本身并未执行 所以既不会console 也不会return 。
+	发生点击事件的时候，会console出结果 7，函数执行后return值没有赋值给oBtn.onclick。
+*/
+
+/*	方式2:
+	oBtn2.onclick=function(){
+		add();
+		return [666];
+	}
+
+	function add(){
+		var a=3,b=4;
+		console.log(a+b);
+		return [a+b];
+	};
+
+	同方式1 ,也是没有返回值。即便加上return 22 还是没有返回值
+	仅仅把函数体bbb这个函数赋值给点击事件。所以如果不发生点击事件，什么都不会发生，函数不会执行。发生点击事件的时候，才会执行函数体内的语句add();return [666]; 但是仍然没有返回值，因为并没有把bbb()赋值给点击事件。
+*/
+	
+	/*方式3:
+	 oBtn3.onclick=add();
+	 function add(){
+		var a=3,b=4;
+		console.log('a+b结果是:'+(a+b) );//a+b结果是:7
+		return [a];//如果不是输出数组，oBtn3.onclick的值还是null。
+	}
+	console.log(oBtn3.onclick);//[3]
+	console.log(typeof oBtn3.onclick);//object
+
+	 首先 这是一个赋值语句，即把右边的赋值给左边。右边为add（），代码读到这里的时候，首先是执行add函数，并把返回值付给点击事件。注意，一旦出现add（），就意味着函数执行了。为了检测效果 暂且先把上面的两种方式注释掉。可以看到，即便没有点击，也会输出console 7，执行函数体内的代码。
+
+	 */
+
+	oBtn3.onclick=add();
+	console.log(oBtn3.onclick);
+	console.log(typeof oBtn3.onclick);
+
+	function add(){
+		var a=3,b=4;
+		console.log('a+b结果是:'+(a+b) );
+		return [a];
+	}
+}
+</script>
+
+<body>
+	<button id='btn1'>方式1</button>
+	<button id='btn2'>方式2</button>
+	<button id='btn3'>方式3</button>
+	<button id='btn4'>方式4</button>
+
+</body>
+
+</html>
+<script>
+
+</script>
